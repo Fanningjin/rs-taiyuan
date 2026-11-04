@@ -1,0 +1,15 @@
+# data
+data/raw/
+data/processed/
+*.tif
+*.tiff
+*.zip
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# system
+.DS_Store
+Thumbs.db
