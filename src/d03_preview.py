@@ -1,3 +1,5 @@
+#将d03_crop.py裁剪出来的成图看一下
+
 import numpy as np
 import rasterio
 import matplotlib.pyplot as plt
