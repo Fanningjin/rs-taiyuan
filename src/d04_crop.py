@@ -4,7 +4,7 @@ import json
 import rasterio
 from rasterio.windows import from_bounds
 
-with open("data/processed/aoi.json", encoding="utf-8") as f:   #encoding：告诉Python 用什么字符编码读这个文件
+with open("aoi.json", encoding="utf-8") as f:   #encoding：告诉Python 用什么字符编码读这个文件
     aoi = json.load(f)  #把文件内容解析成python的字典
 
 base = r"D:\rs-taiyuan\data\raw\S2_20250414.SAFE\GRANULE\L2A_T49SFC_A042329_20250414T032306\IMG_DATA\R10m"

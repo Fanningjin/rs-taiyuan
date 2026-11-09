@@ -1,4 +1,4 @@
-# 做云掩膜
+# 做云掩膜:只针对B04这一个波段
 # 读 SCL → 标出坏像元 → 把标记铺到 B04 的网格 → 在 B04 上把坏位置挖空 → 存文件
 
 import json
@@ -7,7 +7,7 @@ import rasterio
 from rasterio.windows import from_bounds
 from rasterio.warp import reproject, Resampling
 
-with open("data/processed/aoi.json", encoding="utf-8") as f:
+with open("aoi.json", encoding="utf-8") as f:
     aoi = json.load(f)
 
 # 公共路径存成变量，用来拼子路径；r 前缀防止反斜杠被当转义符

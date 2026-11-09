@@ -29,7 +29,7 @@ with rasterio.open(full_path) as src:
 km2 = (aoi["right"] - aoi["left"]) * (aoi["top"] - aoi["bottom"]) / 1e6
 print("AOI面积", km2, "km²")
 
-with open("data/processed/aoi.json", "w", encoding="utf-8") as f:
+with open("aoi.json", "w", encoding="utf-8") as f:
     json.dump(aoi, f, indent=2)
 
 print("saved data/processed/aoi.json")
