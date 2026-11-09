@@ -19,7 +19,7 @@ base = r"D:\rs-taiyuan\data\raw\S2_20250414.SAFE\GRANULE\L2A_T49SFC_A042329_2025
 #f-string 拼路径：{base} 替换成变量值，\\ 是“要一个反斜杠”（因为字符串里单个 \ 是转义符，写两个才表示字面反斜杠）
 scl_path = f"{base}\\R20m\\T49SFC_20250414T031519_SCL_20m.jp2"  #地物分类文件
 with rasterio.open(scl_path) as scl_src:
-    win = from_bounds(aoi["left"], aoi["bottom"], aoi["right"], aoi["top"], scl_src.transform)
+    win = from_bounds(aoi["left"], aoi["bottom"], aoi["right"], aoi["top"], scl_src.transform) #transform转窗口
     win = win.round_offsets().round_lengths()
     scl = scl_src.read(1,window = win)
     scl_transform = scl_src.window_transform(win)

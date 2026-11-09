@@ -22,12 +22,12 @@ for name, fname in bands.items():  #name是键，fname是值
         # 它用 transform 的逆运算来换算;必须按 left, bottom, right, top（西、南、东、北） 的顺序传
         win = from_bounds(aoi["left"], aoi["bottom"], aoi["right"], aoi["top"], src.transform)
         # round_offsets() 把起点四舍五入成整数，round_lengths() 把宽高也取整，两步合起来就把窗口“对齐到像元格”
-        win = win.round_offsets().round_lengths()  #后一步在前一步的结果上再调用
+        win = win.round_offsets().round_lengths()  #后一步在前一步的结果上再调用；前是起点，后是宽高
         #aoi是地理坐标，是m，所以要先变成像素坐标，以此来转换
 
         #这里就和昨天的d03_crop.py一样了，裁剪小窗口
         data = src.read(1, window=win)  #在这里裁剪
-        transform = src.window_transform(win)
+        transform = src.window_transform(win) #window转成transform
 
         profile = src.profile.copy()
         profile.update({
