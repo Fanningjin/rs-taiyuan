@@ -106,7 +106,7 @@ def main():
     #parents=True 表示中间层缺了也一起建（像 mkdir -p）；exist_ok=True 表示目录已存在时不报错
 
     scenes = sorted(in_dir.glob("*.SAFE"))  #收成列表并按字母排序（就是按时间顺序排列）
-    logging.info("共找到 %d 景", len(scenes))
+    logging.info("共找到 %d 景", len(scenes))  #有几个.SAFE文件就会有几景
     #if是0都不会进入循环
 
     ok = 0
