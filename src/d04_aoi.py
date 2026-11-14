@@ -1,4 +1,5 @@
 #确定好项目的研究范围和坐标：10kmx10km
+#11.13-D9：已改AOI，这个用不上了，这一版AOI是我手动框选再计算出来的，改的AI直接给我找的，没有原始框选Tif
 
 import json
 import rasterio
