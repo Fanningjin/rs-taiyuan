@@ -33,7 +33,7 @@ with rasterio.open("data/processed/S2_20250906_B04_clean.tif") as src:
      b04 = src.read(1)
      profile = src.profile.copy()
 
-b02 = read_10m("B02")  #传参是这个形式吗？
+b02 = read_10m("B02")
 b03 = read_10m("B03")
 b08 = read_10m("B08")
 

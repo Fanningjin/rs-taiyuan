@@ -1,6 +1,7 @@
 # data
 data/raw/
 data/processed/
+models/
 *.tif
 *.tiff
 *.zip
