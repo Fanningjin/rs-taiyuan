@@ -68,7 +68,7 @@ ndbi  = (b11 - b08) / (b11 + b08)    # 建成区
 bsi   = ((b11 + b04) - (b08 + b02)) / ((b11 + b04) + (b08 + b02))  # 裸土
 
 features = {"NDVI":ndvi, "NDWI":ndwi, "MNDWI":mndwi, "NDBI":ndbi, "BSI":bsi}
-for name, arr in features.items(): #为什么不是直接in features
+for name, arr in features.items():
     arr = np.clip(arr, -1, 1) #防止个别像元越界
     features[name] = arr
     logging.info("%s:min=%.3f, max=%.3f, mean=%.3f", name,

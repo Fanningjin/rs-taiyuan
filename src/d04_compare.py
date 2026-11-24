@@ -12,6 +12,7 @@ with rasterio.open("data/processed/S2_20250414_B04_clean.tif") as src:
 lo, hi = np.percentile(raw, [2, 98])
 stretch = lambda a: np.clip((a - lo) / (hi - lo), 0, 1)
 
+#不直接cmap="gray"是因为下面要改，所以只能先把对象取出来再对它调用方法
 cmap = plt.get_cmap("gray").copy()
 cmap.set_bad("red")   # 被掩掉的像元显示为红色
 

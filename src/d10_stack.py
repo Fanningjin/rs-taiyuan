@@ -11,7 +11,7 @@ from rasterio.windows import from_bounds
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
-#format为啥不是%s(asctime这种):logging 没有给它喂裸变量，只有这一堆命名字段
+#format不是%s(asctime这种):logging 没有给它喂裸变量，只有这一堆命名字段
 
 with open("aoi.json", encoding="utf-8") as f:
     aoi = json.load(f)

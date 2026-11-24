@@ -71,6 +71,7 @@ priority = [
 labels = np.zeros(ndvi.shape, dtype="uint8")   # 0 = 未分类
 for code, (name, mask) in enumerate(priority, start=1): #code就是enumerate发的号
     mask = mask & (labels == 0)  #已被高优先级规则占掉的像元不再重复计数；是0也就是还没分类的才留下
+    #将mask重新赋值为右边mask & (labels == 0)的结果
     labels[mask] = code
     logging.info("%-10s 候选像元 %8d (%.2f%%)", name, mask.sum(), mask.sum() / labels.size * 100)
 

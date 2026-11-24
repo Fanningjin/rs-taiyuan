@@ -31,11 +31,12 @@ def compute_ndvi(scene_id, aoi):
         win = win.round_offsets().round_lengths()
         b08 = src.read(1,window=win).astype("float32")
 
-    #window_transform函数只传入一个win参数怎么运算的，也不知道其他分辨率什么信息
+
     #b08没去云:NDVI 里 nan - b08 还是 nan、nan / x 还是 nan，B04 的 NaN 会顺着算术传播，云区 NDVI 自动是 NaN。这就是"掩膜继承"
 
     #3.NDVI = (NIR - Red) / (NIR + Red)
     ndvi = (b08-b04)/(b08+b04)
+    #NDVI 的物理定义决定了它只能在 [-1, 1] 之间，越界只可能来自脏输入
     ndvi = np.clip(ndvi, -1, 1).astype("float32")
 
     #4.存tif(profile沿用B04_clean的，本来就是对的)

@@ -43,8 +43,8 @@ def main():
             "转移":f"{CN[f]}->{CN[t]}",
             "n": n,
             "mean": round(float(d.mean()), 3),
-            "median":round(float(np.median(d)), 3),  #？
-            "p10":round(float(np.percentile(d,10)), 3),
+            "median":round(float(np.median(d)), 3),  #中位数
+            "p10":round(float(np.percentile(d,10)), 3),  #10分位数
             "p90":round(float(np.percentile(d,90)), 3),
         })
 

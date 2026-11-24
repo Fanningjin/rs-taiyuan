@@ -38,7 +38,7 @@ for cls, grp in df.groupby("class"):
     if n < 100:
         logging.warning("%s 只有 %d 个点，低于计划的 100 个下限", cls, n)
     grp = grp.sample(frac=1.0, random_state=42)   # 先打乱这一类内部的顺序
-    n_train = int(round(n * 0.7))                 # TODO① 训练集该拿多少个点？（70%，四舍五入）
+    n_train = int(round(n * 0.7))
     train_parts.append(grp.iloc[:n_train])
     val_parts.append(grp.iloc[n_train:])
 
