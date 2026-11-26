@@ -30,6 +30,7 @@ Miniforge3 + conda 环境 `rs`（Python 3.11），主要依赖：`rasterio`、`n
 rs-taiyuan/
 ├─ aoi.json                 # 研究区边界（米制坐标，EPSG:32649）
 ├─ batch_preprocess.py      # 批量预处理：遍历 data/raw/*.SAFE → AOI 裁剪 + SCL 云掩膜
+├─ run.py                   # D15 编排入口：一条命令串联全流程（STEPS 表 + 跳过缓存 + 双路日志）
 ├─ src/                     # 逐日流程脚本
 │  ├─ d03_*.py              # 影像读写 / 窗口裁剪 / 预览
 │  ├─ d04_*.py              # AOI 定义 / 按 AOI 裁剪 / 云掩膜 / 对比图
@@ -67,6 +68,9 @@ rs-taiyuan/
 ## 处理流程（均在项目根目录运行）
 
 ```bash
+# 0) D15：一条命令跑全流程（等价于下列 1)~10)，已完成的步骤自动跳过）
+python run.py --aoi aoi.json
+
 # 1) 批量预处理：裁剪 + 云掩膜（输出 {scene}_B04_clean.tif）
 python batch_preprocess.py --input data/raw --aoi aoi.json --out data/processed
 
@@ -108,6 +112,28 @@ python src/d12_area.py
 python src/d12_change_map.py
 python src/d12_ndvi_check.py
 ```
+
+## 一条命令复现（D15 · `run.py`）
+
+`run.py` 是项目的编排入口：18 个流程脚本登记成一张 `STEPS` 表（一行一个脚本 = 一次调用 + 一组产物 + 一个跳过判据），执行器循环这张表，按"产物齐全则 SKIP、否则 RUN、失败即中止"推进，全过程写双路日志（屏幕 + `outputs/run_时间戳.log`）。
+
+```bash
+python run.py --aoi aoi.json            # 全流程 18 步，缓存命中自动跳过
+python run.py --list                    # 只打印步骤表
+python run.py --force --only ndvi_diff  # 强制重跑指定步骤（逗号分隔可多个）
+python run.py --skip hist,mask          # 排除指定步骤
+python run.py --retrain --only train    # 强制重新训练模型
+```
+
+退出码约定：0 = 全部成功；1 = 中途失败并中止；2 = 参数错误（如步骤名不存在）。
+
+设计取舍（面试可讲）：调用方式选 **subprocess 子进程**而非 import 函数——老脚本多为"一 import 就执行、路径写死"的模块级脚本，整体重构为函数改动面大、易破坏已验证逻辑；子进程方案不动老脚本，代价是参数无法透传（见局限）。细节：`sys.executable` 保证子进程与当前 conda 环境一致，`cwd=项目根` 保证老脚本的相对路径成立，`PYTHONIOENCODING=utf-8` 防止 Windows 管道中文乱码，失败只回传 stderr 尾部 15 行。
+
+局限（v1 已知，答辩时如实讲）：
+
+- 跳过判据只查"产物存在"，不比较新旧（mtime）：强制重算上游后，下游会因产物仍在而 SKIP（**陈旧洞**，已实测复现）。新克隆仓库首次运行请整体加 `--force`，或对受影响的下游步 `--force --only` 一并重跑。
+- 路径参数只有 `--aoi/--raw/--out` 能透传给 `batch_preprocess.py`，其余老脚本仍读项目根默认路径；`--model/--outputs` 目前仅为占位。
+- 采样（d09）与精度抽检（d14）是人工环节（QGIS 核订、盲判），不进自动链；`data/samples/` 与 `outputs/` 中的既有成果视为项目输入。
 
 ## 关键结果
 
@@ -424,7 +450,8 @@ NaN 1,520 与 D12 交集剔除一致）。脚本链：`d13_threshold.py` → `d1
 - [x] NDVI 差值交叉证据：主要转移组判读（D12）
 - [x] NDVI 差值阈值法变化检测 + 形态学清理与最小图斑后处理（D13）
 - [x] 变化精度抽检（分层 60+40 点盲判；变化类 UA=0.800±0.10 达标，身份变化外推 ≈1.2 km²，D14）
-- [ ] CLI 封装（run.py）与 3 页结果报告（D15）
+- [x] CLI 封装：`run.py` 一条命令串起 18 步（STEPS 表 + 跳过缓存 + 双路日志，D15）
+- [ ] 3 页结果报告（D16）
 - [ ] 分类后处理（最小斑块/众数滤波）与样本补强（西山林地、城中村屋顶、收割耕地）
 - [ ] 引入时序特征（2025-04-14 影像）改进耕地/裸地混淆（注：D11 已产出 4 月分类，
   但跨季直接迁移受域漂移限制；时序特征的正确用法留待变化检测环节验证）
